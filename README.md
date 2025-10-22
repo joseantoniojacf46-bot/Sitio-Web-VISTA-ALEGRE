@@ -1,2 +1,8 @@
-# Sitio-Web-VISTA-ALEGRE
-Proyecto web Vista Alegre usando IA y html
+# Proyecto HTML WEB USANDO GEMINI
+Este proyecto esta desarrollado completamente con la IA, usando unicamente html
+
+## AUTOR
+Jose Antonio Fernandez- CUR Chontales
+
+
+
