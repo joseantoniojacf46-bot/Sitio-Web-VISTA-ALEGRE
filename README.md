@@ -2,7 +2,7 @@
 Este proyecto esta desarrollado completamente con la IA, usando unicamente HTML
 
 ## AUTOR
-Jose Antonio Fernandez- CUR Chontales
+Jose Antonio Fernandez- CUR Chontales- 2025
 
 
 
