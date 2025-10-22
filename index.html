@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Alegre | Ven y vive la experiencia</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+    <script>
+        // Configuración de Tailwind para colores y fuentes
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#9B2C2C', // Rojo oscuro
+                        'secondary': '#D69E2E', // Dorado
+                        'text-dark': '#2D3748', // Gris oscuro
+                        'background-light': '#F7FAFC', // Blanco hueso
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Lato', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Estilos base del proyecto (usando las fuentes definidas en tailwind.config) */
+        body {
+            font-family: 'Lato', sans-serif;
+            color: #2D3748;
+            background-color: #F7FAFC;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* 3. Estilo del Header: Transparente con Blur y Sticky */
+        .header-transparent {
+            background-color: transparent;
+            backdrop-filter: blur(0px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .header-scrolled {
+            background-color: rgba(26, 32, 44, 0.9); /* Casi negro, 90% opaco */
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 3. Estilo del Botón CTA: Gradiente y Sombra */
+        .btn-cta {
+            /* Usando las variables de color de Tailwind */
+            background-image: linear-gradient(to right, #D69E2E, #e5b85c);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(214, 158, 46, 0.4), 0 2px 4px -2px rgba(214, 158, 46, 0.2);
+        }
+
+        .btn-cta:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(214, 158, 46, 0.4), 0 4px 6px -4px rgba(214, 158, 46, 0.2);
+        }
+
+        /* 3. Estilo de Tarjetas: Animación Hover */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Fondo de textura ligera para profundidad */
+        .section-textured {
+            background-color: #F7FAFC;
+            background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Ajuste para altura completa del Hero */
+        .swiper-full-height {
+            height: 100vh;
+        }
+
+        /* Estilo para el botón flotante de WhatsApp */
+        .whatsapp-float {
+            z-index: 1000;
+            right: 1.5rem;
+            bottom: 1.5rem;
+        }
+
+        /* FIX HERO SLIDER TEXT OVERLAP: Inicialmente oculta los contenidos de los slides no activos */
+        .swiper-slide-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* FIX HERO SLIDER TEXT OVERLAP: Muestra el contenido solo del slide activo */
+        .swiper-slide-active .swiper-slide-content {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <header id="header" class="fixed top-0 left-0 w-full z-50 header-transparent transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#inicio" class="text-3xl font-serif font-black text-secondary tracking-wider">
+                Vista<span class="text-white">Alegre</span>
+            </a>
+            
+            <nav class="hidden lg:flex space-x-8 text-white text-lg font-medium">
+                <a href="#inicio" class="hover:text-secondary transition duration-200">Inicio</a>
+                <a href="#quienes-somos" class="hover:text-secondary transition duration-200">Quiénes Somos</a>
+                <a href="#servicios" class="hover:text-secondary transition duration-200">Servicios</a>
+                <a href="#galeria" class="hover:text-secondary transition duration-200">Galería</a>
+                <a href="#contacto" class="hover:text-secondary transition duration-200">Contacto</a>
+            </nav>
+
+            <button id="menu-button" class="lg:hidden text-white focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <nav id="mobile-menu" class="lg:hidden fixed inset-0 z-40 bg-gray-900 bg-opacity-95 transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="pt-20 px-6 space-y-4 flex flex-col items-center text-2xl">
+                <button id="close-menu-button" class="absolute top-6 right-6 text-white text-3xl focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+                <a href="#inicio" class="text-white hover:text-secondary transition duration-200 py-2 menu-link">Inicio</a>
+                <a href="#quienes-somos" class="text-white hover:text-secondary transition duration-200 py-2 menu-link">Quiénes Somos</a>
+                <a href="#servicios" class="text-white hover:text-secondary transition duration-200 py-2 menu-link">Servicios</a>
+                <a href="#galeria" class="text-white hover:text-secondary transition duration-200 py-2 menu-link">Galería</a>
+                <a href="#contacto" class="text-white hover:text-secondary transition duration-200 py-2 menu-link">Contacto</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="swiper-container swiper-hero swiper-full-height">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide relative flex items-center justify-center text-center p-4" 
+                    style="background: url('img/S1.jpg') no-repeat center center/cover;">
+                    <div class="absolute inset-0 bg-black opacity-60"></div>
+                    <div class="relative z-10 max-w-4xl text-white swiper-slide-content">
+                        <h1 class="text-6xl md:text-8xl font-serif font-extrabold mb-4 drop-shadow-lg">Tu Descanso Ideal</h1>
+                        <p class="text-xl md:text-3xl font-light mb-8">Habitaciones de lujo con la mejor vista de la ciudad.</p>
+                        <a href="#contacto" class="btn-cta text-white font-bold py-3 px-8 rounded-full uppercase tracking-wider text-lg">
+                            Reservar Ahora <i class="fas fa-bed ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide relative flex items-center justify-center text-center p-4" 
+                    style="background: url('img/S2.jpg') no-repeat center center/cover;">
+                    <div class="absolute inset-0 bg-black opacity-60"></div>
+                    <div class="relative z-10 max-w-4xl text-white swiper-slide-content">
+                        <h1 class="text-6xl md:text-8xl font-serif font-extrabold mb-4 drop-shadow-lg">Sabores de México</h1>
+                        <p class="text-xl md:text-3xl font-light mb-8">Cocina tradicional con un toque gourmet inolvidable.</p>
+                        <a href="#servicios" class="btn-cta text-white font-bold py-3 px-8 rounded-full uppercase tracking-wider text-lg">
+                            Ver Menú <i class="fas fa-utensils ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide relative flex items-center justify-center text-center p-4" 
+                    style="background: url('img/S3.jpg') no-repeat center center/cover;">
+                    <div class="absolute inset-0 bg-black opacity-60"></div>
+                    <div class="relative z-10 max-w-4xl text-white swiper-slide-content">
+                        <h1 class="text-6xl md:text-8xl font-serif font-extrabold mb-4 drop-shadow-lg">El Sabor de la Tradición</h1>
+                        <p class="text-xl md:text-3xl font-light mb-8">Platillos preparados con ingredientes frescos y pasión.</p>
+                        <a href="#servicios" class="btn-cta text-white font-bold py-3 px-8 rounded-full uppercase tracking-wider text-lg">
+                            Ver Menú <i class="fas fa-pepper-hot ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev text-white"></div>
+            <div class="swiper-button-next text-white"></div>
+        </section>
+        
+        <div class="container mx-auto px-6 py-16">
+            <section id="quienes-somos" class="section-textured py-16 md:py-24">
+                <div class="container mx-auto px-6">
+                    <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Nuestra Historia</h2>
+                    <div class="flex flex-col lg:flex-row items-center lg:space-x-12">
+                        <div class="lg:w-1/2 mb-8 lg:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                            <img src="img/S4.jpg" 
+                                alt="Fachada del Hotel y Restaurante Vista Alegre" 
+                                class="rounded-xl shadow-2xl w-full h-auto object-cover transform hover:scale-[1.02] transition-transform duration-500">
+                        </div>
+                        <div class="lg:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                            <p class="text-lg mb-6 leading-relaxed">
+                                **Vista Alegre** nació hace más de 30 años como un sueño de la familia García: crear un oasis donde la hospitalidad se encontrara con el sabor auténtico de México. Lo que comenzó como un pequeño restaurante con solo cuatro mesas, hoy es un referente de lujo y tradición, ofreciendo una experiencia completa de hotel boutique y gastronomía de altura.
+                            </p>
+                            <p class="text-lg leading-relaxed border-l-4 border-secondary pl-4 py-1 italic text-gray-700">
+                                "Ven y vive la experiencia." Más que un lema, es nuestra promesa de un servicio impecable y momentos inolvidables.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="py-16 md:py-24">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Nuestros Pilares</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="fas fa-bullseye text-5xl text-secondary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Misión</h3>
+                        <p class="text-gray-700">Ofrecer una experiencia de lujo y confort, fusionando la excelencia hotelera con la riqueza gastronómica tradicional mexicana.</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center" data-aos="zoom-in" data-aos-delay="200">
+                        <i class="fas fa-star text-5xl text-secondary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Visión</h3>
+                        <p class="text-gray-700">Ser reconocidos como el hotel y restaurante boutique líder en la región por nuestra calidad, calidez humana y autenticidad cultural.</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center" data-aos="zoom-in" data-aos-delay="300">
+                        <i class="fas fa-handshake text-5xl text-secondary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Valores</h3>
+                        <p class="text-gray-700">Hospitalidad, Integridad, Pasión por el Sabor y Compromiso con nuestra comunidad y tradiciones.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="servicios" class="section-textured py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Menú Destacado</h2>
+                <p class="text-center text-lg mb-12 max-w-3xl mx-auto">Una selección de nuestros platillos más aclamados, que combinan tradición y técnicas contemporáneas.</p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative">
+                            <img src="img/S5.jpg">
+                            <span class="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Especial del Chef</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Churrasco de Res</h3>
+                            <p class="text-sm text-gray-600 mb-4">Poblano relleno de picadillo, cubierto con salsa de nuez de Castilla y granada.</p>
+                            <span class="text-2xl font-bold text-secondary">350 C$</span>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                        <img src="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Tacos de Cochinita Pibil" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Tacos de Cochinita Pibil</h3>
+                            <p class="text-sm text-gray-600 mb-4">Carne de cerdo marinada en achiote, cocida lentamente y servida con cebolla morada encurtida.</p>
+                            <span class="text-2xl font-bold text-secondary">$150 MXN</span>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                        <div class="relative">
+                            <img src="https://images.pexels.com/photos/14872322/pexels-photo-14872322.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Mole Poblano" class="w-full h-48 object-cover">
+                            <span class="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Especial del Chef</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Pollo en Mole Poblano</h3>
+                            <p class="text-sm text-gray-600 mb-4">El clásico mole de más de 20 ingredientes, servido con pollo de rancho y arroz rojo.</p>
+                            <span class="text-2xl font-bold text-secondary">$240 MXN</span>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="400">
+                        <img src="https://images.pexels.com/photos/3789885/pexels-photo-3789885.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Aguachile de Camarón" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Aguachile de Camarón</h3>
+                            <p class="text-sm text-gray-600 mb-4">Camarones frescos marinados en jugo de limón, chile serrano y pepino.</p>
+                            <span class="text-2xl font-bold text-secondary">$190 MXN</span>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="500">
+                        <img src="https://images.pexels.com/photos/13596567/pexels-photo-13596567.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Sopa Azteca" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Sopa Azteca</h3>
+                            <p class="text-sm text-gray-600 mb-4">Caldo de tortilla tradicional con aguacate, queso panela, crema y chicharrón.</p>
+                            <span class="text-2xl font-bold text-secondary">$95 MXN</span>
+                        </div>
+                    </div>
+                    <div class="card-hover bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up" data-aos-delay="600">
+                        <div class="relative">
+                            <img src="https://images.pexels.com/photos/5638217/pexels-photo-5638217.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Tiramisú de Mezcal" class="w-full h-48 object-cover">
+                            <span class="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Postre Único</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-text-dark">Tiramisú de Mezcal</h3>
+                            <p class="text-sm text-gray-600 mb-4">Postre italiano con un toque mexicano: bizcochos de soletilla bañados en mezcal.</p>
+                            <span class="text-2xl font-bold text-secondary">$110 MXN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Nuestros Servicios</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center border-t-4 border-primary" data-aos="flip-up" data-aos-delay="100">
+                        <i class="fas fa-wine-glass-alt text-5xl text-primary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Comedor Elegante</h3>
+                        <p class="text-gray-700">Disfrute de nuestra atmósfera exclusiva y la atención de nuestro personal de primera clase para una cena memorable.</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center border-t-4 border-primary" data-aos="flip-up" data-aos-delay="200">
+                        <i class="fas fa-box-open text-5xl text-primary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Para Llevar (Takeout)</h3>
+                        <p class="text-gray-700">Lleve el sabor de Vista Alegre a su hogar. Recoja sus platillos favoritos con nuestro servicio rápido y eficiente.</p>
+                    </div>
+                    <div class="card-hover bg-white p-8 rounded-xl shadow-lg text-center border-t-4 border-primary" data-aos="flip-up" data-aos-delay="300">
+                        <i class="fas fa-hand-holding-heart text-5xl text-primary mb-4"></i>
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-text-dark">Eventos y Catering</h3>
+                        <p class="text-gray-700">Espacios exclusivos y servicio de catering para bodas, reuniones corporativas y celebraciones especiales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria" class="section-textured py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Galería de Sabores</h2>
+                
+                <div class="flex flex-wrap justify-center space-x-3 mb-12" data-aos="fade-up">
+                    <button data-filter="all" class="filter-btn bg-primary text-white font-bold py-2 px-6 rounded-full hover:bg-secondary transition duration-300 mb-3">Todo</button>
+                    <button data-filter="platillos" class="filter-btn bg-white text-text-dark font-bold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300 border border-gray-300 mb-3">Platillos</button>
+                    <button data-filter="ambiente" class="filter-btn bg-white text-text-dark font-bold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300 border border-gray-300 mb-3">Ambiente</button>
+                    <button data-filter="hotel" class="filter-btn bg-white text-text-dark font-bold py-2 px-6 rounded-full hover:bg-gray-200 transition duration-300 border border-gray-300 mb-3">Hotel</button>
+                </div>
+                
+                <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="gallery-item platillos" data-aos="zoom-in" data-aos-delay="100">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/103566/pexels-photo-103566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Tacos gourmet" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Platillo</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item ambiente" data-aos="zoom-in" data-aos-delay="200">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/14002633/pexels-photo-14002633.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Terraza del restaurante" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Ambiente</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item hotel" data-aos="zoom-in" data-aos-delay="300">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Habitación de lujo" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Hotel</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item platillos" data-aos="zoom-in" data-aos-delay="400">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/11051515/pexels-photo-11051515.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Postre creativo" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Postre</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item ambiente" data-aos="zoom-in" data-aos-delay="500">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/2912441/pexels-photo-2912441.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Barra de bebidas" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Bar</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item platillos" data-aos="zoom-in" data-aos-delay="600">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/2873998/pexels-photo-2873998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Parrillada mexicana" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Parrillada</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item hotel" data-aos="zoom-in" data-aos-delay="700">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/103444/pexels-photo-103444.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Piscina del hotel" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Piscina</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item ambiente" data-aos="zoom-in" data-aos-delay="800">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Mesa servida" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Mesa</span>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="gallery-item platillos" data-aos="zoom-in" data-aos-delay="900">
+                        <figure class="relative overflow-hidden rounded-lg shadow-xl cursor-pointer group">
+                            <img src="https://images.pexels.com/photos/745174/pexels-photo-745174.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Cóctel de autor" class="w-full h-64 object-cover transform group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-500">
+                                <span class="text-white text-xl font-bold">Ver Bebida</span>
+                            </div>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Lo que dicen de nosotros</h2>
+                
+                <div class="swiper-container swiper-testimonials max-w-4xl mx-auto p-4" data-aos="fade-up" data-aos-duration="1000">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide bg-background-light p-8 rounded-xl shadow-lg border-l-4 border-secondary">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuario 1" class="w-16 h-16 rounded-full object-cover mr-4 shadow">
+                                <div>
+                                    <p class="font-bold text-lg text-text-dark">Sofía R.</p>
+                                    <div class="text-secondary">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="italic text-gray-700">"El mejor Chile en Nogada que he probado en mi vida. La atención del hotel es inmejorable; un verdadero oasis de tranquilidad. ¡Volveremos pronto!"</p>
+                        </div>
+                        <div class="swiper-slide bg-background-light p-8 rounded-xl shadow-lg border-l-4 border-secondary">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuario 2" class="w-16 h-16 rounded-full object-cover mr-4 shadow">
+                                <div>
+                                    <p class="font-bold text-lg text-text-dark">Javier M.</p>
+                                    <div class="text-secondary">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="italic text-gray-700">"Perfecto para una escapada romántica. Las vistas son increíbles y el ambiente del restaurante es muy acogedor. Altamente recomendado."</p>
+                        </div>
+                        <div class="swiper-slide bg-background-light p-8 rounded-xl shadow-lg border-l-4 border-secondary">
+                            <div class="flex items-center mb-4">
+                                <img src="https://randomuser.me/api/portraits/women/61.jpg" alt="Usuario 3" class="w-16 h-16 rounded-full object-cover mr-4 shadow">
+                                <div>
+                                    <p class="font-bold text-lg text-text-dark">Elena G.</p>
+                                    <div class="text-secondary">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="italic text-gray-700">"Celebramos un evento corporativo y la organización fue impecable. La comida deliciosa y el personal muy profesional. Cinco estrellas."</p>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination mt-8"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="section-textured py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl font-serif font-bold text-primary mb-12 text-center" data-aos="fade-down">Contáctanos y Reserva</h2>
+                
+                <div class="flex flex-col lg:flex-row lg:space-x-12">
+                    <div class="lg:w-1/3 mb-10 lg:mb-0 p-8 bg-white rounded-xl shadow-xl border-t-4 border-secondary" data-aos="fade-right">
+                        <h3 class="text-3xl font-serif font-bold mb-6 text-text-dark">Información Clave</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-xl text-primary mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-bold">Dirección</p>
+                                    <p class="text-gray-700">Av. Principal #123, Centro, 01000 Ciudad de México.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-xl text-primary mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-bold">Horario (Restaurante)</p>
+                                    <p class="text-gray-700">Mar - Dom: 13:00 a 23:00 hrs.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone-alt text-xl text-primary mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-bold">Teléfono</p>
+                                    <p class="text-gray-700">+52 55 1234 5678</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-xl text-primary mt-1 mr-3"></i>
+                                <div>
+                                    <p class="font-bold">Correo Electrónico</p>
+                                    <p class="text-gray-700">info@vistaalegre.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-xl font-bold mt-8 mb-4">Síguenos</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-2xl text-text-dark hover:text-secondary transition"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-2xl text-text-dark hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-2xl text-text-dark hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="lg:w-2/3 space-y-8" data-aos="fade-left">
+                        <div class="p-8 bg-white rounded-xl shadow-xl">
+                            <h3 class="text-3xl font-serif font-bold mb-6 text-primary">Envíanos un Mensaje</h3>
+                            <form id="contact-form" class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                    <input type="text" id="name" name="name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                    <p id="error-name" class="text-sm text-primary mt-1 hidden">El nombre es obligatorio.</p>
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                    <p id="error-email" class="text-sm text-primary mt-1 hidden">Ingresa un email válido.</p>
+                                </div>
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensaje</label>
+                                    <textarea id="message" name="message" rows="4" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary"></textarea>
+                                    <p id="error-message" class="text-sm text-primary mt-1 hidden">El mensaje es obligatorio.</p>
+                                </div>
+                                <button type="submit" class="btn-cta text-white font-bold py-3 px-8 rounded-lg uppercase tracking-wider text-lg w-full">
+                                    Enviar Mensaje <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                                <p id="form-success" class="text-center text-green-600 mt-3 hidden">¡Mensaje enviado con éxito!</p>
+                            </form>
+                        </div>
+                        
+                        <div class="rounded-xl shadow-xl overflow-hidden h-96">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.5930600115045!2d-99.14169338575971!3d19.43260798688469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1f93d395a123f%3A0x673995805566f1e5!2sEl%20Palacio%20de%20Hierro%20Moliere!5e0!3m2!1ses-419!2smx!4v1679089200000!5m2!1ses-419!2smx" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-6 grid md:grid-cols-3 gap-10 border-b border-gray-800 pb-10">
+            <div>
+                <h3 class="text-2xl font-serif font-bold text-secondary mb-4">Vista Alegre</h3>
+                <p class="text-gray-400 text-sm">Hotel y Restaurante con más de tres décadas de tradición, ofreciendo lujo y el auténtico sabor mexicano. "Ven y vive la experiencia".</p>
+                <p class="text-gray-500 text-xs mt-4">© 2025 Vista Alegre. Todos los derechos reservados.</p>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Enlaces Rápidos</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#quienes-somos" class="text-gray-400 hover:text-secondary transition duration-200">Nuestra Historia</a></li>
+                    <li><a href="#servicios" class="text-gray-400 hover:text-secondary transition duration-200">Ver Menú Completo</a></li>
+                    <li><a href="#galeria" class="text-gray-400 hover:text-secondary transition duration-200">Galería</a></li>
+                    <li><a href="#contacto" class="text-gray-400 hover:text-secondary transition duration-200">Reservaciones</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Síguenos</h3>
+                <div class="flex space-x-5">
+                    <a href="#" class="text-2xl text-gray-400 hover:text-secondary transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-2xl text-gray-400 hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-2xl text-gray-400 hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-2xl text-gray-400 hover:text-secondary transition"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+                <h3 class="text-xl font-bold mt-6 mb-3">Llámanos</h3>
+                <p class="text-gray-400 text-lg font-bold">+52 55 1234 5678</p>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 text-center mt-8">
+            <p class="text-xs text-gray-600">Diseñado y Programado por [Tu Nombre/Empresa]</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/525512345678" target="_blank" class="whatsapp-float fixed bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition duration-300 transform hover:scale-110" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Inicialización de AOS
+            AOS.init({
+                duration: 1200,
+                once: true, // Animación solo una vez
+                mirror: false, // No se repite al subir
+            });
+
+            // 2. Inicialización de Swiper (Hero Principal)
+            const heroSwiper = new Swiper('.swiper-hero', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                speed: 800,
+            });
+
+            // Función para aplicar/remover AOS en el slide activo
+            function updateHeroSlideAOS(swiper) {
+                // Selecciona todos los contenidos del slider
+                const slidesContent = swiper.el.querySelectorAll('.swiper-slide-content');
+                slidesContent.forEach(content => {
+                    // Limpia atributos AOS para prevenir conflictos
+                    content.removeAttribute('data-aos');
+                    content.removeAttribute('data-aos-duration');
+                });
+                
+                // Selecciona el índice del slide activo (puede ser realIndex si loop es false)
+                const activeIndex = swiper.activeIndex;
+                
+                // Selecciona el slide activo
+                const activeSlide = swiper.slides[activeIndex];
+                
+                // Selecciona el contenido del slide activo
+                const activeContent = activeSlide.querySelector('.swiper-slide-content');
+
+                // Aplica los atributos AOS al contenido del slide activo
+                if (activeContent) {
+                    activeContent.setAttribute('data-aos', 'fade-up');
+                    activeContent.setAttribute('data-aos-duration', '1000');
+                    AOS.refresh(); // Refresca AOS para disparar la animación
+                }
+            }
+
+            // Disparar la animación en la carga inicial
+            updateHeroSlideAOS(heroSwiper);
+
+            // Disparar la animación al cambiar de slide
+            heroSwiper.on('slideChangeTransitionStart', function() {
+                updateHeroSlideAOS(this);
+            });
+            
+            // 3. Inicialización de Swiper (Testimonios)
+            new Swiper('.swiper-testimonials', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                autoplay: {
+                    delay: 7000,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                breakpoints: {
+                    768: { // Mostrar 2 testimonios en tablet y desktop
+                        slidesPerView: 2,
+                    }
+                }
+            });
+
+            // 4. Lógica de Menú Móvil (Hamburguesa)
+            const menuButton = document.getElementById('menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeMenuButton = document.getElementById('close-menu-button');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('-translate-x-full');
+            });
+
+            closeMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.add('-translate-x-full');
+            });
+
+            // Cerrar menú móvil al hacer click en un enlace
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('-translate-x-full');
+                });
+            });
+
+            // 5. Desplazamiento Suave y Header Sticky/Transparente
+            const header = document.getElementById('header');
+
+            window.addEventListener('scroll', () => {
+                // Header Sticky/Transparente
+                if (window.scrollY > 50) {
+                    header.classList.remove('header-transparent');
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                    header.classList.add('header-transparent');
+                }
+            });
+            
+            // 6. Lógica del Filtrado de Galería
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.getAttribute('data-filter');
+
+                    // Cambiar estilo del botón activo
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white', 'border-transparent');
+                        btn.classList.add('bg-white', 'text-text-dark', 'border-gray-300');
+                    });
+                    button.classList.add('bg-primary', 'text-white', 'border-transparent');
+                    button.classList.remove('bg-white', 'text-text-dark', 'border-gray-300');
+
+                    // Mostrar/Ocultar elementos de la galería
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.classList.contains(filter)) {
+                            item.style.display = 'block';
+                            AOS.refreshHard(); 
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // 7. Validación Simple de Formulario de Contacto
+            const contactForm = document.getElementById('contact-form');
+            const formSuccess = document.getElementById('form-success');
+
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Resetear mensajes de error
+                document.querySelectorAll('.text-sm.text-primary.mt-1').forEach(el => el.classList.add('hidden'));
+                
+                // Validación de Nombre
+                const nameInput = document.getElementById('name');
+                if (nameInput.value.trim() === '') {
+                    document.getElementById('error-name').classList.remove('hidden');
+                    isValid = false;
+                }
+
+                // Validación de Email
+                const emailInput = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value.trim())) {
+                    document.getElementById('error-email').classList.remove('hidden');
+                    isValid = false;
+                }
+
+                // Validación de Mensaje
+                const messageInput = document.getElementById('message');
+                if (messageInput.value.trim() === '') {
+                    document.getElementById('error-message').classList.remove('hidden');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Simulación de envío exitoso
+                    formSuccess.classList.remove('hidden');
+                    contactForm.reset();
+                    
+                    // Ocultar mensaje de éxito después de 5 segundos
+                    setTimeout(() => {
+                        formSuccess.classList.add('hidden');
+                    }, 5000);
+                }
+            });
+            
+        });
+    </script>
+</body>
+</html>
